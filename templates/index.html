@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAULT AI - Secure Password Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            border: 1px solid #1a1a1a;
+            background: #0a0a0a;
+            animation: slideIn 0.5s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+        }
+        .card-header {
+            background: #000000;
+            color: #ffffff;
+            border-radius: 15px 15px 0 0 !important;
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        .card-header h1 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .card-header .subtitle {
+            margin: 5px 0 0 0;
+            font-size: 0.9rem;
+            color: #888;
+        }
+        .card-body {
+            padding: 20px;
+            background: #0a0a0a;
+        }
+        .form-control {
+            background-color: #000000;
+            border: 1px solid #1a1a1a;
+            color: #ffffff;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            background-color: #000000;
+            border-color: #ffffff;
+            color: #ffffff;
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.1);
+            animation: glow 2s infinite;
+        }
+        .form-control::placeholder {
+            color: #333333;
+        }
+        .btn-generate {
+            background: #000000;
+            border: 1px solid #ffffff;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-generate::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+        .btn-generate:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        .btn-generate:active {
+            transform: scale(0.95);
+        }
+        .result-box {
+            background: #000000;
+            border: 1px solid #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            display: none;
+        }
+        .result-box.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        .alert {
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 15px;
+            display: none;
+            background-color: #1a0000;
+            border: 1px solid #330000;
+            color: #ff3333;
+        }
+        .alert.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .password-display {
+            font-size: 1rem;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            color: #ffffff;
+            word-break: break-all;
+            background: #000000;
+            border: 1px solid #1a1a1a;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .password-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .copy-btn {
+            background: #000000;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .copy-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+        .copy-btn:hover::after {
+            width: 100px;
+            height: 100px;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .loading-spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #000000;
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .form-label {
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .strength-indicator {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #1a1a1a;
+            background: #000000;
+        }
+        .strength-indicator h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .strength-bar {
+            height: 8px;
+            border-radius: 4px;
+            margin: 8px 0;
+            background: #1a1a1a;
+            overflow: hidden;
+        }
+        .strength-bar-fill {
+            height: 100%;
+            width: 0;
+            transition: width 1s ease-in-out, background-color 0.3s ease;
+        }
+        .strength-weak { background: #ff3333; }
+        .strength-medium { background: #ffcc00; }
+        .strength-strong { background: #00cc00; }
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .analysis-item {
+            padding: 8px;
+            border-radius: 4px;
+            background: #1a1a1a;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .analysis-item:hover {
+            transform: translateY(-3px);
+            background: #2a2a2a;
+        }
+        .analysis-item i {
+            font-size: 1rem;
+            margin-bottom: 3px;
+            transition: all 0.3s ease;
+        }
+        .analysis-item:hover i {
+            transform: scale(1.2);
+            color: #ffffff;
+        }
+        .feedback-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0 0 0;
+        }
+        .feedback-item {
+            padding: 6px 10px;
+            margin: 4px 0;
+            border-radius: 4px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            animation: slideIn 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .feedback-item:hover {
+            transform: translateX(5px);
+            background: #2a2a2a;
+        }
+        .feedback-item i {
+            margin-right: 10px;
+            color: #ff3333;
+        }
+        .entropy-value {
+            font-size: 0.9rem;
+            font-family: 'Courier New', monospace;
+            color: #00cc00;
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.1); }
+            50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
+            100% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.1); }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            z-index: 1000;
+        }
+        .dark-mode-toggle:hover {
+            transform: rotate(180deg);
+            color: #ffffff;
+        }
+        @media (max-width: 768px) {
+            .container {
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+            .card {
+                margin: 15px;
+            }
+            .card-header h1 {
+                font-size: 1.5rem;
+            }
+            .analysis-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+        }
+
+        /* Light Mode Styles */
+        body.light-mode {
+            background: #f5f5f5;
+            color: #333333;
+        }
+
+        body.light-mode .card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .card-header {
+            background: #ffffff;
+            color: #333333;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        body.light-mode .card-body {
+            background: #ffffff;
+        }
+
+        body.light-mode .form-control {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            color: #333333;
+        }
+
+        body.light-mode .form-control:focus {
+            background-color: #ffffff;
+            border-color: #007bff;
+            color: #333333;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        body.light-mode .form-control::placeholder {
+            color: #999999;
+        }
+
+        body.light-mode .btn-generate {
+            background: #007bff;
+            border: none;
+            color: #ffffff;
+        }
+
+        body.light-mode .result-box {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+        }
+
+        body.light-mode .password-display {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            color: #333333;
+        }
+
+        body.light-mode .strength-indicator {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+        }
+
+        body.light-mode .analysis-item {
+            background: #f8f9fa;
+        }
+
+        body.light-mode .analysis-item:hover {
+            background: #e9ecef;
+        }
+
+        body.light-mode .feedback-item {
+            background: #f8f9fa;
+        }
+
+        body.light-mode .feedback-item:hover {
+            background: #e9ecef;
+        }
+
+        body.light-mode .alert {
+            background-color: #fff3f3;
+            border: 1px solid #ffcdd2;
+            color: #dc3545;
+        }
+
+        body.light-mode .dark-mode-toggle {
+            color: #333333;
+        }
+
+        body.light-mode .dark-mode-toggle:hover {
+            color: #333333;
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+        <i class="fas fa-moon"></i>
+    </button>
+    
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>VAULT AI</h1>
+                <p class="subtitle">Password Strength Analyser</p>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="seedText" class="form-label">Enter Password</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="seedText" placeholder="Enter your password...">
+                        <button class="btn btn-outline-light" onclick="clearInput()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="strength-indicator">
+                    <h4>Password Strength Analysis</h4>
+                    <div class="strength-bar">
+                        <div id="strengthBarFill" class="strength-bar-fill"></div>
+                    </div>
+                    <div id="strengthText" class="text-center mb-3"></div>
+                    
+                    <div class="analysis-grid">
+                        <div class="analysis-item" onclick="showTooltip(this, 'Password length affects security')">
+                            <i class="fas fa-ruler"></i>
+                            <div>Length: <span id="lengthValue">0</span></div>
+                        </div>
+                        <div class="analysis-item" onclick="showTooltip(this, 'Entropy measures password randomness')">
+                            <i class="fas fa-chart-line"></i>
+                            <div>Entropy: <span id="entropyValue" class="entropy-value">0</span></div>
+                        </div>
+                        <div class="analysis-item" onclick="showTooltip(this, 'Estimated time to crack using Hashcat')">
+                            <i class="fas fa-clock"></i>
+                            <div>Time to Crack: <span id="timeToCrackValue">Instant</span></div>
+                        </div>
+                        <div class="analysis-item" onclick="showTooltip(this, 'Uppercase letters increase security')">
+                            <i class="fas fa-font"></i>
+                            <div>Uppercase: <span id="uppercaseValue">❌</span></div>
+                        </div>
+                        <div class="analysis-item" onclick="showTooltip(this, 'Lowercase letters are essential')">
+                            <i class="fas fa-font"></i>
+                            <div>Lowercase: <span id="lowercaseValue">❌</span></div>
+                        </div>
+                        <div class="analysis-item" onclick="showTooltip(this, 'Numbers add complexity')">
+                            <i class="fas fa-hashtag"></i>
+                            <div>Numbers: <span id="numbersValue">❌</span></div>
+                        </div>
+                        <div class="analysis-item" onclick="showTooltip(this, 'Special characters enhance security')">
+                            <i class="fas fa-star"></i>
+                            <div>Special: <span id="specialValue">❌</span></div>
+                        </div>
+                    </div>
+                    
+                    <div id="feedbackList" class="feedback-list"></div>
+                </div>
+
+                <button class="btn btn-primary btn-generate w-100" onclick="generatePassword()">
+                    <i class="fas fa-magic me-2"></i>Generate Better Password
+                </button>
+                
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p class="mt-2">Generating your secure password...</p>
+                </div>
+
+                <div id="result" class="result-box">
+                    <strong>Generated Password:</strong>
+                    <div class="password-display mt-2">
+                        <span id="generatedPassword"></span>
+                        <button class="copy-btn" onclick="copyPassword()">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="error" class="alert alert-danger">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add password analysis functions
+        function calculateEntropy(password) {
+            if (!password) return 0;
+            const charCounts = {};
+            for (let char of password) {
+                charCounts[char] = (charCounts[char] || 0) + 1;
+            }
+            let entropy = 0;
+            for (let count of Object.values(charCounts)) {
+                const probability = count / password.length;
+                entropy -= probability * Math.log2(probability);
+            }
+            return entropy;
+        }
+
+        function calculateTimeToCrack(password) {
+            // Hashcat benchmark parameters (approximate)
+            const HASHES_PER_SECOND = 100000000; // 100M hashes per second (typical GPU)
+            const CHARSET_SIZE = {
+                lowercase: 26,
+                uppercase: 26,
+                numbers: 10,
+                special: 32
+            };
+            
+            let charsetSize = 0;
+            if (password.match(/[a-z]/)) charsetSize += CHARSET_SIZE.lowercase;
+            if (password.match(/[A-Z]/)) charsetSize += CHARSET_SIZE.uppercase;
+            if (password.match(/[0-9]/)) charsetSize += CHARSET_SIZE.numbers;
+            if (password.match(/[^a-zA-Z0-9]/)) charsetSize += CHARSET_SIZE.special;
+            
+            // If no character types detected, assume lowercase only
+            if (charsetSize === 0) charsetSize = CHARSET_SIZE.lowercase;
+            
+            // Calculate possible combinations
+            const combinations = Math.pow(charsetSize, password.length);
+            
+            // Calculate time in seconds
+            let timeInSeconds = combinations / HASHES_PER_SECOND;
+            
+            // Convert to human-readable format
+            if (timeInSeconds < 1) return 'Instant';
+            if (timeInSeconds < 60) return `${Math.round(timeInSeconds)} seconds`;
+            if (timeInSeconds < 3600) return `${Math.round(timeInSeconds / 60)} minutes`;
+            if (timeInSeconds < 86400) return `${Math.round(timeInSeconds / 3600)} hours`;
+            if (timeInSeconds < 31536000) return `${Math.round(timeInSeconds / 86400)} days`;
+            if (timeInSeconds < 3153600000) return `${Math.round(timeInSeconds / 31536000)} years`;
+            return `${Math.round(timeInSeconds / 3153600000)} centuries`;
+        }
+
+        function analyzePassword(password) {
+            const analysis = {
+                length: password.length,
+                entropy: calculateEntropy(password),
+                has_uppercase: /[A-Z]/.test(password),
+                has_lowercase: /[a-z]/.test(password),
+                has_numbers: /[0-9]/.test(password),
+                has_special: /[!@#$%^&*(),.?":{}|<>_]/.test(password),
+                has_common_patterns: /(.)\1{2,}/.test(password),
+                time_to_crack: calculateTimeToCrack(password),
+                score: 0,
+                strength: '',
+                feedback: []
+            };
+            
+            // Calculate score
+            if (analysis.length >= 12) {
+                analysis.score += 2;
+            } else if (analysis.length >= 8) {
+                analysis.score += 1;
+            }
+            
+            if (analysis.entropy >= 3.5) {
+                analysis.score += 2;
+            } else if (analysis.entropy >= 2.5) {
+                analysis.score += 1;
+            }
+            
+            if (analysis.has_uppercase) analysis.score += 1;
+            if (analysis.has_lowercase) analysis.score += 1;
+            if (analysis.has_numbers) analysis.score += 1;
+            if (analysis.has_special) analysis.score += 1;
+            
+            if (analysis.has_common_patterns) analysis.score -= 1;
+            
+            // Determine strength level
+            if (analysis.score >= 7) {
+                analysis.strength = 'Strong';
+            } else if (analysis.score >= 4) {
+                analysis.strength = 'Medium';
+            } else {
+                analysis.strength = 'Weak';
+            }
+            
+            // Generate feedback
+            if (analysis.length < 8) {
+                analysis.feedback.push('Password is too short. Use at least 8 characters.');
+            }
+            if (!analysis.has_uppercase) {
+                analysis.feedback.push('Add uppercase letters for better security.');
+            }
+            if (!analysis.has_lowercase) {
+                analysis.feedback.push('Add lowercase letters for better security.');
+            }
+            if (!analysis.has_numbers) {
+                analysis.feedback.push('Include numbers for better security.');
+            }
+            if (!analysis.has_special) {
+                analysis.feedback.push('Add special characters for better security.');
+            }
+            if (analysis.has_common_patterns) {
+                analysis.feedback.push('Avoid repeated characters.');
+            }
+            
+            return analysis;
+        }
+
+        // Add input event listener for real-time analysis
+        document.getElementById('seedText').addEventListener('input', function(e) {
+            const password = e.target.value;
+            const analysis = analyzePassword(password);
+            updateStrengthAnalysis(analysis);
+        });
+
+        async function generatePassword() {
+            const seedText = document.getElementById('seedText').value;
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+            const loadingDiv = document.querySelector('.loading');
+            
+            if (!seedText) {
+                errorDiv.textContent = 'Please enter some seed text';
+                errorDiv.classList.add('show');
+                resultDiv.classList.remove('show');
+                return;
+            }
+
+            loadingDiv.style.display = 'block';
+            resultDiv.classList.remove('show');
+            errorDiv.classList.remove('show');
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ seed_text: seedText }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Animate password reveal
+                    const passwordElement = document.getElementById('generatedPassword');
+                    passwordElement.textContent = '';
+                    const password = data.password;
+                    
+                    for (let i = 0; i < password.length; i++) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        passwordElement.textContent += password[i];
+                    }
+                    
+                    resultDiv.classList.add('show');
+                    errorDiv.classList.remove('show');
+                    
+                    // Add success animation
+                    resultDiv.style.animation = 'pulse 0.5s ease';
+                    setTimeout(() => {
+                        resultDiv.style.animation = '';
+                    }, 500);
+                } else {
+                    errorDiv.textContent = data.error || 'An error occurred';
+                    errorDiv.classList.add('show');
+                    resultDiv.classList.remove('show');
+                }
+            } catch (error) {
+                errorDiv.textContent = 'An error occurred while generating the password';
+                errorDiv.classList.add('show');
+                resultDiv.classList.remove('show');
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+
+        function updateStrengthAnalysis(analysis) {
+            // Update strength bar
+            const strengthBar = document.getElementById('strengthBarFill');
+            const strengthText = document.getElementById('strengthText');
+            const score = analysis.score;
+            const maxScore = 8; // Maximum possible score
+            
+            let percentage = (score / maxScore) * 100;
+            strengthBar.style.width = `${percentage}%`;
+            
+            // Set strength bar color and text
+            if (score >= 7) {
+                strengthBar.className = 'strength-bar-fill strength-strong';
+                strengthText.textContent = 'Strong Password';
+                strengthText.style.color = '#00cc00';
+            } else if (score >= 4) {
+                strengthBar.className = 'strength-bar-fill strength-medium';
+                strengthText.textContent = 'Medium Password';
+                strengthText.style.color = '#ffcc00';
+            } else {
+                strengthBar.className = 'strength-bar-fill strength-weak';
+                strengthText.textContent = 'Weak Password';
+                strengthText.style.color = '#ff3333';
+            }
+            
+            // Update analysis values
+            document.getElementById('lengthValue').textContent = analysis.length;
+            document.getElementById('entropyValue').textContent = analysis.entropy.toFixed(2);
+            document.getElementById('timeToCrackValue').textContent = analysis.time_to_crack;
+            document.getElementById('uppercaseValue').textContent = analysis.has_uppercase ? '✅' : '❌';
+            document.getElementById('lowercaseValue').textContent = analysis.has_lowercase ? '✅' : '❌';
+            document.getElementById('numbersValue').textContent = analysis.has_numbers ? '✅' : '❌';
+            document.getElementById('specialValue').textContent = analysis.has_special ? '✅' : '❌';
+            
+            // Update feedback list
+            const feedbackList = document.getElementById('feedbackList');
+            feedbackList.innerHTML = '';
+            analysis.feedback.forEach(feedback => {
+                const li = document.createElement('li');
+                li.className = 'feedback-item';
+                li.innerHTML = `<i class="fas fa-exclamation-circle"></i>${feedback}`;
+                feedbackList.appendChild(li);
+            });
+        }
+
+        function copyPassword() {
+            const password = document.getElementById('generatedPassword').textContent;
+            navigator.clipboard.writeText(password).then(() => {
+                const copyBtn = document.querySelector('.copy-btn');
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                
+                // Add success animation
+                copyBtn.style.animation = 'pulse 0.3s ease';
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.style.animation = '';
+                }, 2000);
+            });
+        }
+
+        function clearInput() {
+            document.getElementById('seedText').value = '';
+            document.getElementById('result').classList.remove('show');
+        }
+
+        function showTooltip(element, text) {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip';
+            tooltip.textContent = text;
+            element.appendChild(tooltip);
+            
+            setTimeout(() => {
+                tooltip.remove();
+            }, 2000);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.querySelector('.dark-mode-toggle i');
+            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-sun');
+            
+            // Save preference to localStorage
+            const isLightMode = document.body.classList.contains('light-mode');
+            localStorage.setItem('lightMode', isLightMode);
+        }
+
+        // Check for saved preference on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const isLightMode = localStorage.getItem('lightMode') === 'true';
+            if (isLightMode) {
+                document.body.classList.add('light-mode');
+                const icon = document.querySelector('.dark-mode-toggle i');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        });
+    </script>
+</body>
+</html> 
