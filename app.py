@@ -154,8 +154,6 @@ def generate():
         seed_text = request.json.get('seed_text', '')
         if not seed_text:
             return jsonify({'error': 'Please provide a seed text'}), 400
-        
-        # Check if seed text contains valid characters
         invalid_chars = [ch for ch in seed_text if ch not in char2idx]
         if invalid_chars:
             return jsonify({
