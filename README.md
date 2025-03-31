@@ -1,7 +1,7 @@
 # Password Strength Analyzer 
 
 ## Overview
-This project is a prototype Password Strength Analyzer built using a Recurrent Neural Network (RNN). It is designed to evaluate the strength of passwords by training on a dataset and predicting the strength of new inputs.
+This project is a prototype Password Strength Analyzer built using a Recurrent Neural Network (RNN). It is designed to evaluate the strength of passwords by training on a dataset and predicting the strength of new inputs. It also generates a new strong password with high entropy using a RNN architecture. 
 
 ## Features
 - **Password Strength Prediction** using a trained RNN model.
