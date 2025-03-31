@@ -59,5 +59,3 @@ The model was trained on a dataset of passwords with various strengths labeled. 
 
 ---
 
-Made with ❤️ using Colab.
-
