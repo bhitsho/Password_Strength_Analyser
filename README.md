@@ -20,7 +20,7 @@ This project is a prototype Password Strength Analyzer built using a Recurrent N
 ## Installation
 1. Clone the repository:
 ```bash
-   git clone <repository-link>
+   git clone https://github.com/bhitsho/Password_Strength_Analyser
 ```
 
 2. Navigate to the project directory:
