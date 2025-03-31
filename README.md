@@ -1,7 +1,7 @@
 # Password Strength Analyzer 
 
 ## Overview
-This project is a prototype Password Strength Analyzer built using a Recurrent Neural Network (RNN). It is designed to evaluate the strength of passwords by training on a dataset and predicting the strength of new inputs. The RNN model helps to generate strong passwords with high entropy.
+This project is a prototype Password Strength Analyzer built using a Recurrent Neural Network (RNN). It is designed to evaluate the strength of passwords by training on a dataset and predicting the strength of new inputs.
 
 ## Features
 - **Password Strength Prediction** using a trained RNN model.
@@ -9,6 +9,7 @@ This project is a prototype Password Strength Analyzer built using a Recurrent N
 - **Visual Explanation Tool** (via `xaibarclays.ipynb`) for understanding model predictions.
 
 ## Files
+- [Download Model (password_rnn_pipeline.h5)](https://drive.google.com/file/d/1Ryrpf1Fuy-cihvvRQhQtFBPKhzcV5yK6/view?usp=sharing)
 - `app.py`: Flask application for running the model and serving the web interface.
 - `password_rnn_pipeline.h5`: Trained RNN model.
 - `requirements.txt`: Dependencies required to run the project.
@@ -51,11 +52,15 @@ The model was trained on a dataset of passwords with various strengths labeled. 
 - Integrate advanced architectures like Transformers.
 - Deploy as a web service using Docker.
 
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Authors
 - **CaptHeisenberg**
-- **ayushpathak477**
 - **bhitsho**
+- **ayushpathak477**
 
 ---
+
+Team Heisenberg
 
