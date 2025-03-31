@@ -52,8 +52,6 @@ The model was trained on a dataset of passwords with various strengths labeled. 
 - Integrate advanced architectures like Transformers.
 - Deploy as a web service using Docker.
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Authors
 - **CaptHeisenberg**
