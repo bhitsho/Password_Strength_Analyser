@@ -9,7 +9,7 @@ This project is a prototype Password Strength Analyzer built using a Recurrent N
 - **Visual Explanation Tool** (via `xaibarclays.ipynb`) for understanding model predictions.
 
 ## Files
-- [Download Model (password_rnn_pipeline.h5)](https://drive.google.com/file/d/1Ryrpf1Fuy-cihvvRQhQtFBPKhzcV5yK6/view?usp=sharing)
+- [Download New Model (password_rnn_pipeline.h5)](https://drive.google.com/file/d/1Ryrpf1Fuy-cihvvRQhQtFBPKhzcV5yK6/view?usp=sharing)
 - `app.py`: Flask application for running the model and serving the web interface.
 - `password_rnn_pipeline.h5`: Trained RNN model.
 - `requirements.txt`: Dependencies required to run the project.
