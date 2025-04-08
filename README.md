@@ -1,7 +1,11 @@
 # Password Strength Analyzer
 
 ## Overview
+
 This project is a **Password Strength Analyzer** built using a Recurrent Neural Network (RNN). It evaluates password strength by training on a dataset and predicting the robustness of new inputs. The RNN model also generates strong passwords with high entropy to improve security.
+=======
+This project is a prototype Password Strength Analyzer built using a Recurrent Neural Network (RNN). It is designed to evaluate the strength of passwords by training on a dataset and predicting the strength of new inputs. It also generates a new strong password with high entropy using a RNN architecture. 
+
 
 ## Features
 - **Password Strength Prediction:** Uses a trained RNN model to classify password strength.
@@ -11,6 +15,7 @@ This project is a **Password Strength Analyzer** built using a Recurrent Neural 
 - **Scalable Architecture:** Easily extendable to include more complex architectures like Transformers.
 
 ## Files
+- [Download New Model (password_rnn_pipeline.h5)](https://drive.google.com/file/d/1Ryrpf1Fuy-cihvvRQhQtFBPKhzcV5yK6/view?usp=sharing)
 - `app.py`: Flask application for running the model and serving the web interface.
 - `password_rnn_pipeline.h5`: Trained RNN model. [Download Model](https://drive.google.com/file/d/1Ryrpf1Fuy-cihvvRQhQtFBPKhzcV5yK6/view?usp=drive_link)
 - `requirements.txt`: Dependencies required to run the project.
@@ -28,7 +33,7 @@ This project is a **Password Strength Analyzer** built using a Recurrent Neural 
 ### Installation Steps
 1. **Clone the repository:**
 ```bash
-   git clone <repository-link>
+   git clone https://github.com/bhitsho/Password_Strength_Analyser
 ```
 
 2. **Navigate to the project directory:**
@@ -70,12 +75,14 @@ The model was trained on a dataset of passwords labeled with varying strengths. 
 
 ## Authors
 - **CaptHeisenberg**
-- **ayushpathak477**
 - **bhitsho**
+- **ayushpathak477**
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 - Inspired by various password strength estimation methodologies and neural network architectures.
+
+Team Heisenberg
 
