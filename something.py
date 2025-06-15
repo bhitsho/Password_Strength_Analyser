@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
+
 class PasswordRNN(nn.Module):
     def __init__(self, vocab_size, hidden_size, num_layers):
         super(PasswordRNN, self).__init__()
@@ -29,9 +30,9 @@ def generate_password(model, seed, char2idx, idx2char, vocab_size, gen_length=10
             sampled_token_index = np.random.choice(range(vocab_size), p=prob)
             sampled_char = idx2char[sampled_token_index]
             generated += sampled_char
-
             input_tensor = torch.tensor([[sampled_token_index]], dtype=torch.long)
         return generated
+
 pipeline = torch.load("password_rnn_pipeline.h5")
 char2idx = pipeline["char2idx"]
 idx2char = pipeline["idx2char"]
